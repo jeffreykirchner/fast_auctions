@@ -715,10 +715,11 @@ Public Class frmMain
     Public Function convertToX(ByVal tempWidth As Integer, ByVal xOffest As Integer, ByVal markerWidth As Integer, tempValue As Double) As Double
         Try
 
-            Dim tempT As Double = tempWidth / maxValue
-            Dim tempV As Double = tempValue
+            Dim tempT As Double = Convert.ToDouble(tempWidth) / Convert.ToDouble(maxValue)
 
-            Return (tempT * tempV + xOffest - markerWidth / 2)
+            Dim markerWidthHalf As Double = Convert.ToDouble(markerWidth) / 2 'adjust for width of marker
+
+            Return Math.Ceiling(tempT * tempValue + Convert.ToDouble(xOffest) - markerWidthHalf)
 
         Catch ex As Exception
             appEventLog_Write("error :", ex)
@@ -734,12 +735,15 @@ Public Class frmMain
 
             If p > graphMax Then p = graphMax 'check off scale high
 
-            tempD = p - graphMin
+            tempD = Convert.ToDouble(p - graphMin)
 
-            tempD = tempD / (graphMax - graphMin)
-            tempD = tempHeight * (1 - tempD) + yOffset
+            tempD = tempD / Convert.ToDouble(graphMax - graphMin)
+            tempD = Convert.ToDouble(tempHeight) * (1 - tempD) + Convert.ToDouble(yOffset)
 
-            Return tempD - markerWidth / 2  'adjust for width of marker
+            Dim markerWidthHalf As Double = Convert.ToDouble(markerWidth) / 2 'adjust for width of marker
+            Dim result = Math.Floor(tempD - markerWidthHalf)
+
+            Return result
 
         Catch ex As Exception
             appEventLog_Write("error convertY:", ex)
